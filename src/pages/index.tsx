@@ -3,9 +3,8 @@ import Image from "next/legacy/image"
 import { useKeenSlider } from 'keen-slider/react'
 import 'keen-slider/keen-slider.min.css'
 
-import Shirt from '../assets/shirt.png'
 import { stripe } from "@/lib/stripe"
-import { GetServerSideProps } from "next"
+import { GetStaticProps } from "next"
 import Stripe from "stripe"
 
 interface HomeProps {
@@ -34,7 +33,7 @@ export default function Home({ products }: HomeProps) {
               <Image src={product.imageUrl} width={480} height={520} alt="" />
               <footer>
                 <span>{product.name}</span>
-                <strong>R$ {product.price}</strong>
+                <strong>{product.price}</strong>
               </footer>
             </Product>
           )
@@ -44,25 +43,34 @@ export default function Home({ products }: HomeProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const response = await stripe.products.list({
     expand: ['data.default_price']
   })
 
   const products = response.data.map(product => {
     const price = product.default_price as Stripe.Price
+    let formattedPrice = ''
+
+    if (price.unit_amount != null) {
+      formattedPrice = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      }).format(price.unit_amount / 100)
+    }
 
     return {
       id: product.id,
       name: product.name,
       imageUrl: product.images[0],
-      price: price.unit_amount
+      price: formattedPrice
     }
   })
 
   return {
     props: {
       products
-    }
+    },
+    revalidate: 60 * 60 * 2
   }
 }
