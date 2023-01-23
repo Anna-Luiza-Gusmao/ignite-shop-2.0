@@ -20,12 +20,14 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - React
 - Node e NPM
 - Next
+- Stripe API
 
 
 ## 📚 Bibliotecas
 
 - Stitches
-
+- Axios
+- Keen Slider
 
 ## 🎨 Figma
 
