@@ -7,7 +7,6 @@ import Image from "next/legacy/image"
 import { useRouter } from "next/router"
 import Stripe from "stripe"
 import SkeletonScreen from "./components/SkeletonScreen"
-import { useEffect } from "react"
 
 interface ProductProps {
     product: {
