@@ -6,6 +6,8 @@ import Head from "next/head"
 import Image from "next/legacy/image"
 import { useRouter } from "next/router"
 import Stripe from "stripe"
+import SkeletonScreen from "./components/SkeletonScreen"
+import { useEffect } from "react"
 
 interface ProductProps {
     product: {
@@ -21,7 +23,7 @@ interface ProductProps {
 export default function Product({ product }: ProductProps) {
     const { isFallback } = useRouter()
 
-    if (isFallback) return <p>Loading...</p>
+    if (isFallback) return <SkeletonScreen />
 
     async function handleBuyProduct() {
         try {
