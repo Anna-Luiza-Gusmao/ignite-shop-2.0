@@ -8,12 +8,12 @@ import Link from "next/link"
 interface SucceesProps {
     customerName: string,
     product: {
-        name: string,
         imageUrl: string
-    }
+    },
+    quantity: number
 }
 
-export default function Success({ customerName, product }: SucceesProps) {
+export default function Success({ customerName, product, quantity }: SucceesProps) {
     return (
         <>
             <Head>
@@ -26,7 +26,7 @@ export default function Success({ customerName, product }: SucceesProps) {
                 </ImageContainer>
 
                 <h1>Compra Efetuada!</h1>
-                <p>Uhuul <strong>{customerName}</strong>, sua compra de 3 camisetas já está a caminho da sua casa. </p>
+                <p>Uhuul <strong>{customerName}</strong>, sua compra de {quantity} camisetas já está a caminho da sua casa. </p>
                 <Link href='/'>Voltar ao catálogo</Link>
             </SuccessContainer>
         </>
@@ -54,9 +54,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
         props: {
             customerName,
             product: {
-                name: product.name,
                 imageUrl: product.images[0]
-            }
+            },
+            quantity: session.amount_total
         }
     }
 }
