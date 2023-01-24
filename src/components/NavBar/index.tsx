@@ -8,10 +8,22 @@ import { BagContext } from '@/context'
 
 export default function NavBar() {
     const [openMenu, setOpenMenu] = useState(false)
-    const { amountShirts } = useContext(BagContext)
+    const { amountShirts, setAmountShirts } = useContext(BagContext)
 
     const handleOptionMenu = () => {
         setOpenMenu(!openMenu)
+    }
+
+    async function handleBuyProduct() {
+        setAmountShirts(0)
+        try {
+
+            window.location.href = ''
+        } catch (err) {
+            // Conectar com uma ferramenta de observabilidade (Datalog / Sentry)
+
+            alert('Falha ao redirecionar ao checkout!')
+        }
     }
 
     return (
@@ -58,7 +70,7 @@ export default function NavBar() {
                                     <p>Valor Total</p>
                                     <p>R$ 270,00</p>
                                 </PriceItems>
-                                <button>Finalizar compra</button>
+                                <button onClick={handleBuyProduct}>Finalizar compra</button>
                             </footer>
                         </ItemsContainer>
                     </MenuBar>

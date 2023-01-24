@@ -7,6 +7,8 @@ import Image from "next/legacy/image"
 import { useRouter } from "next/router"
 import Stripe from "stripe"
 import SkeletonScreen from "./components/SkeletonScreen"
+import { useContext } from "react"
+import { BagContext } from "@/context"
 
 interface ProductProps {
     product: {
@@ -21,10 +23,12 @@ interface ProductProps {
 
 export default function Product({ product }: ProductProps) {
     const { isFallback } = useRouter()
+    const { amountShirts, setAmountShirts } = useContext(BagContext)
 
     if (isFallback) return <SkeletonScreen />
 
-    async function handleBuyProduct() {
+    async function handleAddProduct() {
+        setAmountShirts(amountShirts + 1)
         try {
             const response = await axios.post('/api/checkout', {
                 priceId: product.defaultPriceId
@@ -32,7 +36,7 @@ export default function Product({ product }: ProductProps) {
 
             const { checkoutUrl } = response.data
 
-            window.location.href = checkoutUrl
+            //window.location.href = checkoutUrl
         } catch (err) {
             // Conectar com uma ferramenta de observabilidade (Datalog / Sentry)
 
@@ -56,7 +60,7 @@ export default function Product({ product }: ProductProps) {
 
                     <p>{product.description}</p>
 
-                    <button onClick={handleBuyProduct}>Colocar na sacola</button>
+                    <button onClick={handleAddProduct}>Colocar na sacola</button>
                 </ProductDetails>
             </ProductContainer>
         </>
