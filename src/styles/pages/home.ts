@@ -28,7 +28,7 @@ export const Product = styled('div', {
         bottom: '0.25rem',
         left: '0.25rem',
         right: '0.25rem',
-        padding: '2rem',
+        padding: '1.25rem',
 
         borderRadius: 6,
 
@@ -41,6 +41,12 @@ export const Product = styled('div', {
         transform: 'translateY(110%)',
         opacity: 0,
         transition: 'all 0.2s ease-in-out',
+
+        div: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+        },
 
         strong: {
             fontSize: '$xl',
@@ -61,4 +67,11 @@ export const Product = styled('div', {
             opacity: 1
         }
     }
+})
+
+export const ShoppingBag = styled('div', {
+    padding: '0.75rem',
+    background: '$green500',
+    borderRadius: 6,
+    cursor: 'pointer'
 })
