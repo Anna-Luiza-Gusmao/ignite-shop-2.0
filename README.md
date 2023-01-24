@@ -28,6 +28,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - Stitches
 - Axios
 - Keen Slider
+- Phosphor React
 
 ## 🎨 Figma
 

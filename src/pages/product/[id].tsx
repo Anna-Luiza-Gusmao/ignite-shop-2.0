@@ -57,7 +57,7 @@ export default function Product({ product }: ProductProps) {
 
                     <p>{product.description}</p>
 
-                    <button onClick={handleBuyProduct}>Comprar agora</button>
+                    <button onClick={handleBuyProduct}>Colocar na sacola</button>
                 </ProductDetails>
             </ProductContainer>
         </>
