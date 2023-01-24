@@ -1,5 +1,28 @@
 import { styled } from "@stitches/react"
 
+export const AmountShirts = styled('div', {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '0.75rem',
+
+    position: 'relative',
+    width: 14,
+    height: 14,
+    right: -34,
+    top: 18,
+
+    backgroundColor: '$green500 !important',
+    borderRadius:  '9999px !important',
+    color: '#FFF',
+
+    flex: 'none',
+    order: '1',
+    flexGrow: '0',
+    zIndex: '1',
+})
+
 export const MenuBar = styled('section', {
     display: 'flex',
     flexDirection: 'column',

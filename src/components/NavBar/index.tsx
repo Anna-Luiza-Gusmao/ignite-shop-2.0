@@ -1,12 +1,14 @@
 import { Handbag, X } from 'phosphor-react'
-import { useState } from 'react'
-import { MenuBar, ItemsContainer, AmountItems, PriceItems, ImageContainer, ProductContainer } from './styles'
+import { useContext, useState } from 'react'
+import { MenuBar, ItemsContainer, AmountItems, PriceItems, ImageContainer, ProductContainer, AmountShirts } from './styles'
 import Image from "next/legacy/image"
 
-import teste from '../../assets/teste.png'
+import teste2 from '../../assets/teste.png'
+import { BagContext } from '@/context'
 
 export default function NavBar() {
     const [openMenu, setOpenMenu] = useState(false)
+    const { amountShirts } = useContext(BagContext)
 
     const handleOptionMenu = () => {
         setOpenMenu(!openMenu)
@@ -16,9 +18,12 @@ export default function NavBar() {
         <nav>
             {
                 (!openMenu) ? (
-                    <div onClick={handleOptionMenu}>
-                        <Handbag size={24} color='#8D8D99' />
-                    </div>
+                    <section style={{marginBottom: '1.25rem'}}>
+                        <AmountShirts>{amountShirts}</AmountShirts>
+                        <div onClick={handleOptionMenu}>
+                            <Handbag size={24} color='#8D8D99' />
+                        </div>
+                    </section>
                 ) : (
                     <MenuBar onClick={handleOptionMenu}>
                         <X size={24} color='#8D8D99' />
@@ -26,7 +31,7 @@ export default function NavBar() {
                             <h1>Sacola de compras</h1>
                             <ProductContainer>
                                 <ImageContainer>
-                                    <Image src={teste} width={94} height={94} alt="" />
+                                    <Image src={teste2} width={94} height={94} alt="" />
                                 </ImageContainer>
                                 <div>
                                     <p>Camiseta Beyond the Limits</p>
@@ -36,7 +41,7 @@ export default function NavBar() {
                             </ProductContainer>
                             <ProductContainer>
                                 <ImageContainer>
-                                    <Image src={teste} width={94} height={94} alt="" />
+                                    <Image src={teste2} width={94} height={94} alt="" />
                                 </ImageContainer>
                                 <div>
                                     <p>Camiseta Beyond the Limits</p>
@@ -47,7 +52,7 @@ export default function NavBar() {
                             <footer>
                                 <AmountItems>
                                     <p>Quantidade</p>
-                                    <p>3 itens</p>
+                                    <p>1 itens</p>
                                 </AmountItems>
                                 <PriceItems>
                                     <p>Valor Total</p>
