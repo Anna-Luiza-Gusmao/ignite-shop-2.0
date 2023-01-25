@@ -6,10 +6,19 @@ import Image from "next/legacy/image"
 import teste2 from '../../assets/teste.png'
 import { BagContext } from '@/context'
 import axios from 'axios'
+import produce from 'immer'
 
 export default function NavBar() {
     const [openMenu, setOpenMenu] = useState(false)
-    const { amountShirts, cartItems, setSumOfShirtsPrice, sumOfShirtsPrice, emptyBag } = useContext(BagContext)
+    const { 
+        amountShirts, 
+        cartItems, 
+        setSumOfShirtsPrice, 
+        sumOfShirtsPrice, 
+        emptyBag, 
+        setCartItems, 
+        setAmountShirts 
+    } = useContext(BagContext)
 
     function calculateTotalItems() {
         let totalPriceShirts = 0
@@ -37,6 +46,23 @@ export default function NavBar() {
 
     const handleOptionMenu = () => {
         setOpenMenu(!openMenu)
+    }
+
+    const handleRemoveProduct = (productId: string) => {
+        const productAlreadyExists = cartItems.findIndex((cartItem) => cartItem.id === productId)
+
+        const newCart = produce(cartItems, (draft) => {
+            if (productAlreadyExists >= 0) {
+                draft.splice(productAlreadyExists, 1)
+            }
+        })
+
+        setCartItems(newCart)
+        setAmountShirts(amountShirts - 1)
+        if (typeof window !== 'undefined') { 
+            const stateAmountShirt = JSON.stringify(amountShirts - 1)
+            localStorage.setItem('@ignite-shop-2.0: amountShirts-state-1.0.0', stateAmountShirt)
+        }
     }
 
     return (
@@ -70,7 +96,7 @@ export default function NavBar() {
                                             <div>
                                                 <p>{shirt.name}</p>
                                                 <strong>R$ {parseFloat(shirt.price).toFixed(2).replace(".", ",")}</strong>
-                                                <span>Remover</span>
+                                                <span onClick={() => handleRemoveProduct(shirt.id)}>Remover</span>
                                             </div>
                                         </ProductContainer>
                                     ))

@@ -39,11 +39,16 @@ export function BagContextProvider({ children }: BagContextProviderProps) {
     const [emptyBag, setEmptyBag] = useState(true)
 
     const checkEmptyBag = () => {
-        if(cartItems.length !== 0) setEmptyBag(false)
+        if(cartItems.length === 0) {
+            setEmptyBag(true)
+        } else {
+            setEmptyBag(false)
+        }
     }
+    
     useEffect(() => {
         checkEmptyBag()
-    })
+    }, [amountShirts])
 
     return (
         <BagContext.Provider value={{

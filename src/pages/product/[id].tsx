@@ -6,7 +6,7 @@ import Image from "next/legacy/image"
 import { useRouter } from "next/router"
 import Stripe from "stripe"
 import SkeletonScreen from "./components/SkeletonScreen"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { BagContext, IProduct } from "@/context"
 import produce from "immer"
 
@@ -44,8 +44,11 @@ export default function Product({ product }: ProductProps) {
     const [productAlreadyAdded, setProductAlreadyAdded] = useState(false)
 
     const checkProductAlreadyAdded = () => {
-        if(productAlreadyExists < 0) setProductAlreadyAdded(true)
-        setProductAlreadyAdded(true)
+        if(productAlreadyExists < 0) {
+            setProductAlreadyAdded(false)
+        } else {
+            setProductAlreadyAdded(true)
+        }
     }
 
     async function handleAddProduct() {
@@ -74,6 +77,10 @@ export default function Product({ product }: ProductProps) {
             setCartItems(allShirtsSelected)
         }
     }
+
+    useEffect(() => {
+        checkProductAlreadyAdded()
+    }, [cartItems])
 
     return (
         <>
