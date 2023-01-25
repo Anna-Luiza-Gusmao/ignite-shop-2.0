@@ -33,7 +33,7 @@ export default function NavBar() {
         <nav>
             {
                 (!openMenu) ? (
-                    <section style={{marginBottom: '1.25rem'}}>
+                    <section style={{ marginBottom: '1.25rem' }}>
                         <AmountShirts>{amountShirts}</AmountShirts>
                         <div onClick={handleOptionMenu}>
                             <Handbag size={24} color='#8D8D99' />
@@ -44,30 +44,24 @@ export default function NavBar() {
                         <X size={24} color='#8D8D99' />
                         <ItemsContainer>
                             <h1>Sacola de compras</h1>
-                            <ProductContainer>
-                                <ImageContainer>
-                                    <Image src={teste2} width={94} height={94} alt="" />
-                                </ImageContainer>
-                                <div>
-                                    <p>Camiseta Beyond the Limits</p>
-                                    <strong>R$ 79,90</strong>
-                                    <span>Remover</span>
-                                </div>
-                            </ProductContainer>
-                            <ProductContainer>
-                                <ImageContainer>
-                                    <Image src={teste2} width={94} height={94} alt="" />
-                                </ImageContainer>
-                                <div>
-                                    <p>Camiseta Beyond the Limits</p>
-                                    <strong>R$ 79,90</strong>
-                                    <span>Remover</span>
-                                </div>
-                            </ProductContainer>
+                            {
+                                cartItems.map((shirt) => (
+                                    <ProductContainer key={shirt.id}>
+                                        <ImageContainer>
+                                            <Image src={shirt.imageUrl} width={94} height={94} alt="" />
+                                        </ImageContainer>
+                                        <div>
+                                            <p>{shirt.name}</p>
+                                            <strong>{shirt.price}</strong>
+                                            <span>Remover</span>
+                                        </div>
+                                    </ProductContainer>
+                                ))
+                            }
                             <footer>
                                 <AmountItems>
                                     <p>Quantidade</p>
-                                    <p>1 itens</p>
+                                    <p>{amountShirts} itens</p>
                                 </AmountItems>
                                 <PriceItems>
                                     <p>Valor Total</p>
