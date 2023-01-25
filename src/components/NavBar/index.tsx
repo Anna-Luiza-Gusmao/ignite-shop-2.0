@@ -9,14 +9,13 @@ import axios from 'axios'
 
 export default function NavBar() {
     const [openMenu, setOpenMenu] = useState(false)
-    const { amountShirts, setAmountShirts, cartItems } = useContext(BagContext)
+    const { amountShirts, cartItems } = useContext(BagContext)
 
     const handleOptionMenu = () => {
         setOpenMenu(!openMenu)
     }
 
     async function handleBuyProduct() {
-        setAmountShirts(0)
         try {
             const response = await axios.post('/api/checkout', {
                 products: cartItems

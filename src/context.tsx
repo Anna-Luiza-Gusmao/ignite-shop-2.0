@@ -23,14 +23,22 @@ export interface IProduct {
 }
 
 export function BagContextProvider({ children }: BagContextProviderProps) {
-    const [amountShirts, setAmountShirts] = useState(0)
-    const [cartItems, setCartItems] = useState<IProduct[]>([])
+    let stateAmountShirt = 0
+
+    if (typeof window !== 'undefined') {
+        const amountShirtsLocalStorage = localStorage.getItem('@ignite-shop-2.0: amountShirts-state-1.0.0')
+        if (amountShirtsLocalStorage != null) stateAmountShirt = parseInt(amountShirtsLocalStorage)
+    }
+
+    const [amountShirts, setAmountShirts] = useState(stateAmountShirt)
+
+    const [cartItems, setCartItems] = useState<IProduct[]>([]) 
 
     return (
         <BagContext.Provider value={{
-            amountShirts, 
+            amountShirts,
             setAmountShirts,
-            cartItems, 
+            cartItems,
             setCartItems
         }}
         >

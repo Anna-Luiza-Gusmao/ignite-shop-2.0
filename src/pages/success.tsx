@@ -1,19 +1,30 @@
+import { BagContext } from "@/context"
 import { stripe } from "@/lib/stripe"
 import { ImageContainer, SuccessContainer } from "@/styles/pages/success"
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import Image from "next/legacy/image"
 import Link from "next/link"
+import { useContext } from "react"
 
 interface SucceesProps {
     customerName: string,
     product: {
         imageUrl: string
-    },
-    quantity: number
+    }
 }
 
-export default function Success({ customerName, product, quantity }: SucceesProps) {
+export default function Success({ customerName, product }: SucceesProps) {
+    const { amountShirts, setAmountShirts } = useContext(BagContext)
+
+    const resetAmountShirts = () => {
+        if (typeof window !== 'undefined') { 
+            const stateAmountShirt = JSON.stringify(0)
+            localStorage.setItem('@ignite-shop-2.0: amountShirts-state-1.0.0', stateAmountShirt)
+        }
+        setAmountShirts(0)
+    }
+
     return (
         <>
             <Head>
@@ -26,8 +37,8 @@ export default function Success({ customerName, product, quantity }: SucceesProp
                 </ImageContainer>
 
                 <h1>Compra Efetuada!</h1>
-                <p>Uhuul <strong>{customerName}</strong>, sua compra de {quantity} camisetas já está a caminho da sua casa. </p>
-                <Link href='/'>Voltar ao catálogo</Link>
+                <p>Uhuul <strong>{customerName}</strong>, sua compra de {amountShirts} camisetas já está a caminho da sua casa. </p>
+                <Link href='/' onClick={resetAmountShirts}>Voltar ao catálogo</Link>
             </SuccessContainer>
         </>
     )
@@ -55,8 +66,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
             customerName,
             product: {
                 imageUrl: product.images[0]
-            },
-            quantity: session.amount_total
+            }
         }
     }
 }

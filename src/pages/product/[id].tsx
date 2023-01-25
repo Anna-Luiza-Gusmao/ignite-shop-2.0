@@ -66,6 +66,11 @@ export default function Product({ product }: ProductProps) {
             })
 
             setAmountShirts(amountShirts + 1)
+            if (typeof window !== 'undefined') { 
+                const stateAmountShirt = JSON.stringify(amountShirts + 1)
+                localStorage.setItem('@ignite-shop-2.0: amountShirts-state-1.0.0', stateAmountShirt)
+            }
+
             setCartItems(allShirtsSelected)
         }
     }
