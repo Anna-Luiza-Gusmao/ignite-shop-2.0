@@ -5,10 +5,11 @@ import Image from "next/legacy/image"
 
 import teste2 from '../../assets/teste.png'
 import { BagContext } from '@/context'
+import axios from 'axios'
 
 export default function NavBar() {
     const [openMenu, setOpenMenu] = useState(false)
-    const { amountShirts, setAmountShirts } = useContext(BagContext)
+    const { amountShirts, setAmountShirts, cartItems } = useContext(BagContext)
 
     const handleOptionMenu = () => {
         setOpenMenu(!openMenu)
@@ -17,11 +18,13 @@ export default function NavBar() {
     async function handleBuyProduct() {
         setAmountShirts(0)
         try {
+            const response = await axios.post('/api/checkout', {
+                products: cartItems
+            })
+            const { checkoutUrl } = response.data
 
-            window.location.href = ''
+            window.location.href = checkoutUrl
         } catch (err) {
-            // Conectar com uma ferramenta de observabilidade (Datalog / Sentry)
-
             alert('Falha ao redirecionar ao checkout!')
         }
     }

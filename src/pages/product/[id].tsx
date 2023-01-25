@@ -1,14 +1,14 @@
 import { stripe } from "@/lib/stripe"
 import { ImageContainer, ProductContainer, ProductDetails } from "@/styles/pages/product"
-import axios from "axios"
 import { GetStaticPaths, GetStaticProps } from "next"
 import Head from "next/head"
 import Image from "next/legacy/image"
 import { useRouter } from "next/router"
 import Stripe from "stripe"
 import SkeletonScreen from "./components/SkeletonScreen"
-import { useContext } from "react"
-import { BagContext } from "@/context"
+import { useContext, useState } from "react"
+import { BagContext, IProduct } from "@/context"
+import produce from "immer"
 
 interface ProductProps {
     product: {
@@ -21,26 +21,52 @@ interface ProductProps {
     }
 }
 
+const BaseDataShirtSelected = [
+    {
+        id: '',
+        name: '',
+        imageUrl: '',
+        price: '',
+        description: '',
+        defaultPriceId: ''
+    }
+]
+
 export default function Product({ product }: ProductProps) {
     const { isFallback } = useRouter()
-    const { amountShirts, setAmountShirts } = useContext(BagContext)
-
     if (isFallback) return <SkeletonScreen />
 
+
+    const { amountShirts, setAmountShirts, setCartItems, cartItems } = useContext(BagContext)
+    let allShirtsSelected: IProduct[] = []
+
+    const productAlreadyExists = cartItems.findIndex((cartItem) => cartItem.id === product.id)
+    const [productAlreadyAdded, setProductAlreadyAdded] = useState(false)
+
+    const checkProductAlreadyAdded = () => {
+        if(productAlreadyExists < 0) setProductAlreadyAdded(true)
+        setProductAlreadyAdded(true)
+    }
+
     async function handleAddProduct() {
-        setAmountShirts(amountShirts + 1)
-        try {
-            const response = await axios.post('/api/checkout', {
-                priceId: product.defaultPriceId
+        checkProductAlreadyAdded()
+
+        if (productAlreadyExists < 0) {
+            produce(BaseDataShirtSelected, draft => {
+                allShirtsSelected.push(
+                    { 
+                        id: product.id, 
+                        name: product.name, 
+                        imageUrl: product.imageUrl, 
+                        price: product.price, 
+                        description: product.description,
+                        defaultPriceId: product.defaultPriceId
+                    }
+                )
             })
 
-            const { checkoutUrl } = response.data
-
-            //window.location.href = checkoutUrl
-        } catch (err) {
-            // Conectar com uma ferramenta de observabilidade (Datalog / Sentry)
-
-            alert('Falha ao redirecionar ao checkout!')
+            setAmountShirts(amountShirts + 1)
+            setCartItems(allShirtsSelected)
         }
     }
 
@@ -60,7 +86,7 @@ export default function Product({ product }: ProductProps) {
 
                     <p>{product.description}</p>
 
-                    <button onClick={handleAddProduct}>Colocar na sacola</button>
+                    <button onClick={handleAddProduct} disabled={productAlreadyAdded} >Colocar na sacola</button>
                 </ProductDetails>
             </ProductContainer>
         </>
