@@ -87,7 +87,7 @@ export default function Product({ product }: ProductProps) {
 
                 <ProductDetails>
                     <h1>{product.name}</h1>
-                    <span>{product.price}</span>
+                    <span>R$ {parseFloat(product.price).toFixed(2).replace(".", ",")}</span>
 
                     <p>{product.description}</p>
 
@@ -119,13 +119,10 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ para
         })
 
         const price = product.default_price as Stripe.Price
-        let formattedPrice = ''
+        let formattedPrice = 0.00
 
         if (price.unit_amount != null) {
-            formattedPrice = new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            }).format(price.unit_amount / 100)
+            formattedPrice = (price.unit_amount / 100)
         }
 
         return {

@@ -62,9 +62,30 @@ export const ItemsContainer = styled('div', {
         fontWeight: 'bold',
         fontSize: '$md',
 
-        '&:hover': {
+        '&:not(:disabled):hover': {
             backgroundColor: '$green300',
+        },
+
+        '&:disabled': {
+            cursor: 'not-allowed',
+            opacity: 0.7
         }
+    }
+})
+
+export const EmptyBagContainer = styled('div', {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '1rem',
+    marginTop: '6rem',
+
+    svg: {
+        marginLeft: 0
+    },
+
+    p: {
+        color: '#8D8D99'
     }
 })
 

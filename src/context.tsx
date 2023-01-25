@@ -1,10 +1,13 @@
-import { ReactNode, createContext, useState } from 'react'
+import { ReactNode, createContext, useEffect, useState } from 'react'
 
 interface BagContextType {
     amountShirts: number,
     setAmountShirts: React.Dispatch<React.SetStateAction<number>>,
     cartItems: IProduct[],
-    setCartItems: React.Dispatch<React.SetStateAction<IProduct[]>>
+    setCartItems: React.Dispatch<React.SetStateAction<IProduct[]>>,
+    sumOfShirtsPrice: number,
+    setSumOfShirtsPrice: React.Dispatch<React.SetStateAction<number>>,
+    emptyBag: boolean
 }
 
 export const BagContext = createContext({} as BagContextType)
@@ -31,15 +34,26 @@ export function BagContextProvider({ children }: BagContextProviderProps) {
     }
 
     const [amountShirts, setAmountShirts] = useState(stateAmountShirt)
-
     const [cartItems, setCartItems] = useState<IProduct[]>([]) 
+    const [sumOfShirtsPrice, setSumOfShirtsPrice] = useState(0.00)
+    const [emptyBag, setEmptyBag] = useState(true)
+
+    const checkEmptyBag = () => {
+        if(cartItems.length !== 0) setEmptyBag(false)
+    }
+    useEffect(() => {
+        checkEmptyBag()
+    })
 
     return (
         <BagContext.Provider value={{
             amountShirts,
             setAmountShirts,
             cartItems,
-            setCartItems
+            setCartItems,
+            sumOfShirtsPrice, 
+            setSumOfShirtsPrice,
+            emptyBag
         }}
         >
             {children}
