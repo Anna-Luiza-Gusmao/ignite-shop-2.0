@@ -36,9 +36,15 @@ export default function Product({ product }: ProductProps) {
     const { isFallback } = useRouter()
     if (isFallback) return <SkeletonScreen />
 
-
-    const { amountShirts, setAmountShirts, setCartItems, cartItems } = useContext(BagContext)
+    const { 
+        amountShirts, 
+        setAmountShirts, 
+        setCartItems, 
+        cartItems
+    } = useContext(BagContext)
+    
     let allShirtsSelected: IProduct[] = []
+    let teste: any = [] 
 
     const productAlreadyExists = cartItems.findIndex((cartItem) => cartItem.id === product.id)
     const [productAlreadyAdded, setProductAlreadyAdded] = useState(false)
@@ -74,7 +80,9 @@ export default function Product({ product }: ProductProps) {
                 localStorage.setItem('@ignite-shop-2.0: amountShirts-state-1.0.0', stateAmountShirt)
             }
 
-            setCartItems(allShirtsSelected)
+            teste = [...cartItems, ...allShirtsSelected]
+            console.log(teste)
+            setCartItems(teste)
         }
     }
 

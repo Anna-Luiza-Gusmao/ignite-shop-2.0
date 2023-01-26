@@ -3,7 +3,6 @@ import { useContext, useState } from 'react'
 import { MenuBar, ItemsContainer, AmountItems, PriceItems, ImageContainer, ProductContainer, AmountShirts, EmptyBagContainer } from './styles'
 import Image from "next/legacy/image"
 
-import teste2 from '../../assets/teste.png'
 import { BagContext } from '@/context'
 import axios from 'axios'
 import produce from 'immer'

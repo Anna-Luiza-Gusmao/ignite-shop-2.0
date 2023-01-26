@@ -6,16 +6,16 @@ import Head from "next/head"
 import Image from "next/legacy/image"
 import Link from "next/link"
 import { useContext } from "react"
+import Stripe from "stripe"
 
 interface SucceesProps {
     customerName: string,
-    product: {
-        imageUrl: string
-    }
+    products: Stripe.LineItem[],
+    quantity: number
 }
 
-export default function Success({ customerName, product }: SucceesProps) {
-    const { amountShirts, setAmountShirts } = useContext(BagContext)
+export default function Success({ customerName, quantity, products }: SucceesProps) {
+    const { setAmountShirts } = useContext(BagContext)
 
     const resetAmountShirts = () => {
         if (typeof window !== 'undefined') { 
@@ -32,12 +32,17 @@ export default function Success({ customerName, product }: SucceesProps) {
                 <meta name="robots" content="noindex" />
             </Head>
             <SuccessContainer>
-                <ImageContainer>
-                    <Image src={product.imageUrl} width={120} height={110} alt="" />
-                </ImageContainer>
-
+                <div>
+                    {
+                        products.map((shirt) => (
+                            <ImageContainer>
+                                <Image src={shirt.price?.product.images[0]} width={120} height={110} alt="" />
+                            </ImageContainer>
+                        ))
+                    }
+                </div>
                 <h1>Compra Efetuada!</h1>
-                <p>Uhuul <strong>{customerName}</strong>, sua compra de {amountShirts} camisetas já está a caminho da sua casa. </p>
+                <p>Uhuul <strong>{customerName}</strong>, sua compra de {quantity} camisetas já está a caminho da sua casa. </p>
                 <Link href='/' onClick={resetAmountShirts}>Voltar ao catálogo</Link>
             </SuccessContainer>
         </>
@@ -59,14 +64,13 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     })
 
     const customerName = session.customer_details?.name
-    const product = session.line_items?.data[0].price?.product
+    const products = session.line_items?.data
 
     return {
         props: {
             customerName,
-            product: {
-                imageUrl: product.images[0]
-            }
+            products: products,
+            quantity: products?.length
         }
     }
 }
