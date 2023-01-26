@@ -18,11 +18,11 @@ export default function App({ Component, pageProps }: AppProps) {
         {
           (router.pathname === '/success') ? (
             <HeaderSuccess>
-              <Image src={Logo} alt="" />
+              <Image src={Logo} alt="" onClick={() => router.push('/')} style={{cursor: 'pointer'}}/>
             </HeaderSuccess>
           ) : (
             <Header>
-              <Image src={Logo} alt="" />
+              <Image src={Logo} alt="" onClick={() => router.push('/')} style={{cursor: 'pointer'}}/>
               <NavBar />
             </Header>
           )

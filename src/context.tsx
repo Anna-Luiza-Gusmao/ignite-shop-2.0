@@ -3,8 +3,8 @@ import { ReactNode, createContext, useEffect, useState } from 'react'
 interface BagContextType {
     amountShirts: number,
     setAmountShirts: React.Dispatch<React.SetStateAction<number>>,
-    cartItems: IProduct[],
-    setCartItems: React.Dispatch<React.SetStateAction<IProduct[]>>,
+    bagItems: IProduct[],
+    setBagItems: React.Dispatch<React.SetStateAction<IProduct[]>>,
     sumOfShirtsPrice: number,
     setSumOfShirtsPrice: React.Dispatch<React.SetStateAction<number>>,
     emptyBag: boolean
@@ -34,12 +34,12 @@ export function BagContextProvider({ children }: BagContextProviderProps) {
     }
 
     const [amountShirts, setAmountShirts] = useState(stateAmountShirt)
-    const [cartItems, setCartItems] = useState<IProduct[]>([]) 
+    const [bagItems, setBagItems] = useState<IProduct[]>([]) 
     const [sumOfShirtsPrice, setSumOfShirtsPrice] = useState(0.00)
     const [emptyBag, setEmptyBag] = useState(true)
 
     const checkEmptyBag = () => {
-        if(cartItems.length === 0) {
+        if(bagItems.length === 0) {
             setEmptyBag(true)
         } else {
             setEmptyBag(false)
@@ -48,14 +48,17 @@ export function BagContextProvider({ children }: BagContextProviderProps) {
     
     useEffect(() => {
         checkEmptyBag()
+        if (document.readyState === 'complete') {
+            localStorage.clear()
+        }
     }, [amountShirts])
 
     return (
         <BagContext.Provider value={{
             amountShirts,
             setAmountShirts,
-            cartItems,
-            setCartItems,
+            bagItems,
+            setBagItems,
             sumOfShirtsPrice, 
             setSumOfShirtsPrice,
             emptyBag

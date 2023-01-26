@@ -11,18 +11,18 @@ export default function NavBar() {
     const [openMenu, setOpenMenu] = useState(false)
     const { 
         amountShirts, 
-        cartItems, 
+        bagItems, 
         setSumOfShirtsPrice, 
         sumOfShirtsPrice, 
         emptyBag, 
-        setCartItems, 
+        setBagItems, 
         setAmountShirts 
     } = useContext(BagContext)
 
     function calculateTotalItems() {
         let totalPriceShirts = 0
 
-        cartItems.forEach(shirt => {
+        bagItems.forEach(shirt => {
             totalPriceShirts += parseFloat(shirt.price)
         })
 
@@ -33,7 +33,7 @@ export default function NavBar() {
     async function handleBuyProduct() {
         try {
             const response = await axios.post('/api/checkout', {
-                products: cartItems
+                products: bagItems
             })
             const { checkoutUrl } = response.data
 
@@ -48,15 +48,15 @@ export default function NavBar() {
     }
 
     const handleRemoveProduct = (productId: string) => {
-        const productAlreadyExists = cartItems.findIndex((cartItem) => cartItem.id === productId)
+        const productAlreadyExists = bagItems.findIndex((bagItems) => bagItems.id === productId)
 
-        const newCart = produce(cartItems, (draft) => {
+        const newCart = produce(bagItems, (draft) => {
             if (productAlreadyExists >= 0) {
                 draft.splice(productAlreadyExists, 1)
             }
         })
 
-        setCartItems(newCart)
+        setBagItems(newCart)
         setAmountShirts(amountShirts - 1)
         if (typeof window !== 'undefined') { 
             const stateAmountShirt = JSON.stringify(amountShirts - 1)
@@ -87,7 +87,7 @@ export default function NavBar() {
                                     </EmptyBagContainer>
                                 ) :
                                 (
-                                    cartItems.map((shirt) => (
+                                    bagItems.map((shirt) => (
                                         <ProductContainer key={shirt.id}>
                                             <ImageContainer>
                                                 <Image src={shirt.imageUrl} width={94} height={94} alt="" />

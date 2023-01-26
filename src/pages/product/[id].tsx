@@ -39,14 +39,13 @@ export default function Product({ product }: ProductProps) {
     const { 
         amountShirts, 
         setAmountShirts, 
-        setCartItems, 
-        cartItems
+        setBagItems, 
+        bagItems
     } = useContext(BagContext)
     
     let allShirtsSelected: IProduct[] = []
-    let teste: any = [] 
 
-    const productAlreadyExists = cartItems.findIndex((cartItem) => cartItem.id === product.id)
+    const productAlreadyExists = bagItems.findIndex((bagItems) => bagItems.id === product.id)
     const [productAlreadyAdded, setProductAlreadyAdded] = useState(false)
 
     const checkProductAlreadyAdded = () => {
@@ -80,15 +79,13 @@ export default function Product({ product }: ProductProps) {
                 localStorage.setItem('@ignite-shop-2.0: amountShirts-state-1.0.0', stateAmountShirt)
             }
 
-            teste = [...cartItems, ...allShirtsSelected]
-            console.log(teste)
-            setCartItems(teste)
+            setBagItems([...bagItems, ...allShirtsSelected])
         }
     }
 
     useEffect(() => {
         checkProductAlreadyAdded()
-    }, [cartItems])
+    }, [bagItems])
 
     return (
         <>

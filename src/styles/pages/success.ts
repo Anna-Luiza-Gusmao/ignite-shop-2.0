@@ -57,6 +57,10 @@ export const ImageContainer = styled('div', {
     alignItems: 'center',
     justifyContent: 'center',
 
+    '&:first-child': {
+        marginLeft: '0',
+    },
+
     img: {
         objectFit: 'cover'
     }
