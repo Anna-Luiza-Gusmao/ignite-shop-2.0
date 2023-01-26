@@ -2,9 +2,14 @@
   <img alt="Capa Ignite Shop" src="./github/capa.png" width="100%">
 </p>
 
+
 ## 🎉 Let's go!
 
-Para iniciar o projeto insira o comando <code>npm run dev</code> ou visite a **URL**: 
+Para iniciar o projeto insira o comando <code>npm run dev</code>
+
+## 🎥 Demonstração 
+
+<img src="./github/demonstration.gif">
 
 
 ## 💻 Projeto
