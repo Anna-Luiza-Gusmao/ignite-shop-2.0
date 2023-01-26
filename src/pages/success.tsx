@@ -35,7 +35,7 @@ export default function Success({ customerName, quantity, products }: SucceesPro
                 <div>
                     {
                         products.map((shirt) => (
-                            <ImageContainer>
+                            <ImageContainer key={shirt.id}>
                                 <Image src={shirt.price?.product.images[0]} width={120} height={110} alt="" />
                             </ImageContainer>
                         ))
