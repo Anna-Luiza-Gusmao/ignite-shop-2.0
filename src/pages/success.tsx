@@ -1,19 +1,30 @@
+import { BagContext } from "@/context"
 import { stripe } from "@/lib/stripe"
 import { ImageContainer, SuccessContainer } from "@/styles/pages/success"
 import { GetServerSideProps } from "next"
 import Head from "next/head"
 import Image from "next/legacy/image"
 import Link from "next/link"
+import { useContext } from "react"
+import Stripe from "stripe"
 
 interface SucceesProps {
     customerName: string,
-    product: {
-        name: string,
-        imageUrl: string
-    }
+    products: Stripe.LineItem[],
+    quantity: number
 }
 
-export default function Success({ customerName, product }: SucceesProps) {
+export default function Success({ customerName, quantity, products }: SucceesProps) {
+    const { setAmountShirts } = useContext(BagContext)
+
+    const resetAmountShirts = () => {
+        if (typeof window !== 'undefined') { 
+            const stateAmountShirt = JSON.stringify(0)
+            localStorage.setItem('@ignite-shop-2.0: amountShirts-state-1.0.0', stateAmountShirt)
+        }
+        setAmountShirts(0)
+    }
+
     return (
         <>
             <Head>
@@ -21,14 +32,18 @@ export default function Success({ customerName, product }: SucceesProps) {
                 <meta name="robots" content="noindex" />
             </Head>
             <SuccessContainer>
+                <div>
+                    {
+                        products.map((shirt) => (
+                            <ImageContainer key={shirt.id}>
+                                <Image src={shirt.price?.product.images[0]} width={120} height={110} alt="" />
+                            </ImageContainer>
+                        ))
+                    }
+                </div>
                 <h1>Compra Efetuada!</h1>
-
-                <ImageContainer>
-                    <Image src={product.imageUrl} width={120} height={110} alt="" />
-                </ImageContainer>
-
-                <p>Uhuul <strong>{customerName}</strong>, sua <strong>{product.name}</strong> já está a caminho da sua casa.</p>
-                <Link href='/'>Voltar ao catálogo</Link>
+                <p>Uhuul <strong>{customerName}</strong>, sua compra de {quantity} camisetas já está a caminho da sua casa. </p>
+                <Link href='/' onClick={resetAmountShirts}>Voltar ao catálogo</Link>
             </SuccessContainer>
         </>
     )
@@ -49,15 +64,13 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     })
 
     const customerName = session.customer_details?.name
-    const product = session.line_items?.data[0].price?.product
+    const products = session.line_items?.data
 
     return {
         props: {
             customerName,
-            product: {
-                name: product.name,
-                imageUrl: product.images[0]
-            }
+            products: products,
+            quantity: products?.length
         }
     }
 }

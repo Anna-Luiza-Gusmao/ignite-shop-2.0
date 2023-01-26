@@ -33,21 +33,33 @@ export const SuccessContainer = styled('main', {
         '&:hover': {
             color: '$green300',
         }
+    },
+
+    div: {
+        display: 'flex',
+        justifyContent: 'center',
+        width: '100%',
+        marginBottom: '2rem'
     }
 })
 
 export const ImageContainer = styled('div', {
     background: 'linear-gradient(180deg, #1ea483 0%, #7465d4 100%)',
     width: '100%',
-    maxWidth: 130,
-    height: 145,
-    borderRadius: 8,
+    maxWidth: 140,
+    height: 140,
+    borderRadius: 9999,
     padding: '0.25rem',
-    marginTop: '4rem',
+    marginLeft: '-3.5rem',
+    zIndex: '2',
 
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+
+    '&:first-child': {
+        marginLeft: '0',
+    },
 
     img: {
         objectFit: 'cover'

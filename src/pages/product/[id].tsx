@@ -1,11 +1,14 @@
 import { stripe } from "@/lib/stripe"
 import { ImageContainer, ProductContainer, ProductDetails } from "@/styles/pages/product"
-import axios from "axios"
 import { GetStaticPaths, GetStaticProps } from "next"
 import Head from "next/head"
 import Image from "next/legacy/image"
 import { useRouter } from "next/router"
 import Stripe from "stripe"
+import SkeletonScreen from "./components/SkeletonScreen"
+import { useContext, useEffect, useState } from "react"
+import { BagContext, IProduct } from "@/context"
+import produce from "immer"
 
 interface ProductProps {
     product: {
@@ -18,26 +21,71 @@ interface ProductProps {
     }
 }
 
+const BaseDataShirtSelected = [
+    {
+        id: '',
+        name: '',
+        imageUrl: '',
+        price: '',
+        description: '',
+        defaultPriceId: ''
+    }
+]
+
 export default function Product({ product }: ProductProps) {
     const { isFallback } = useRouter()
+    if (isFallback) return <SkeletonScreen />
 
-    if (isFallback) return <p>Loading...</p>
+    const { 
+        amountShirts, 
+        setAmountShirts, 
+        setBagItems, 
+        bagItems
+    } = useContext(BagContext)
+    
+    let allShirtsSelected: IProduct[] = []
 
-    async function handleBuyProduct() {
-        try {
-            const response = await axios.post('/api/checkout', {
-                priceId: product.defaultPriceId
-            })
+    const productAlreadyExists = bagItems.findIndex((bagItems) => bagItems.id === product.id)
+    const [productAlreadyAdded, setProductAlreadyAdded] = useState(false)
 
-            const { checkoutUrl } = response.data
-
-            window.location.href = checkoutUrl
-        } catch (err) {
-            // Conectar com uma ferramenta de observabilidade (Datalog / Sentry)
-
-            alert('Falha ao redirecionar ao checkout!')
+    const checkProductAlreadyAdded = () => {
+        if(productAlreadyExists < 0) {
+            setProductAlreadyAdded(false)
+        } else {
+            setProductAlreadyAdded(true)
         }
     }
+
+    async function handleAddProduct() {
+        checkProductAlreadyAdded()
+
+        if (productAlreadyExists < 0) {
+            produce(BaseDataShirtSelected, draft => {
+                allShirtsSelected.push(
+                    { 
+                        id: product.id, 
+                        name: product.name, 
+                        imageUrl: product.imageUrl, 
+                        price: product.price, 
+                        description: product.description,
+                        defaultPriceId: product.defaultPriceId
+                    }
+                )
+            })
+
+            setAmountShirts(amountShirts + 1)
+            if (typeof window !== 'undefined') { 
+                const stateAmountShirt = JSON.stringify(amountShirts + 1)
+                localStorage.setItem('@ignite-shop-2.0: amountShirts-state-1.0.0', stateAmountShirt)
+            }
+
+            setBagItems([...bagItems, ...allShirtsSelected])
+        }
+    }
+
+    useEffect(() => {
+        checkProductAlreadyAdded()
+    }, [bagItems])
 
     return (
         <>
@@ -51,11 +99,11 @@ export default function Product({ product }: ProductProps) {
 
                 <ProductDetails>
                     <h1>{product.name}</h1>
-                    <span>{product.price}</span>
+                    <span>R$ {parseFloat(product.price).toFixed(2).replace(".", ",")}</span>
 
                     <p>{product.description}</p>
 
-                    <button onClick={handleBuyProduct}>Comprar agora</button>
+                    <button onClick={handleAddProduct} disabled={productAlreadyAdded} >Colocar na sacola</button>
                 </ProductDetails>
             </ProductContainer>
         </>
@@ -83,13 +131,10 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ para
         })
 
         const price = product.default_price as Stripe.Price
-        let formattedPrice = ''
+        let formattedPrice = 0.00
 
         if (price.unit_amount != null) {
-            formattedPrice = new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            }).format(price.unit_amount / 100)
+            formattedPrice = (price.unit_amount / 100)
         }
 
         return {

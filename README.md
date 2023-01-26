@@ -6,9 +6,10 @@
 
 Para iniciar o projeto insira o comando <code>npm run dev</code> ou visite a **URL**: 
 
+
 ## 💻 Projeto
 
-
+Uma aplicação que simula um <i>e-commerce</i> de Camisetas para implementar uma sacola de compras que utiliza os dados da API do Stripe para buscar os itens existentes.
 
 
 ## 🚀 Tecnologias
@@ -19,7 +20,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - Typescript
 - React
 - Node e NPM
-- Next
+- Next JS
 - Stripe API
 
 
@@ -28,6 +29,8 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - Stitches
 - Axios
 - Keen Slider
+- Phosphor React
+- Immer
 
 ## 🎨 Figma
 
